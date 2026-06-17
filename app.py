@@ -1,3 +1,4 @@
+
 import os
 import logging
 import random
@@ -13,39 +14,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Список определений
-TOAD_TYPES = [
-    "🐸 Ты сегодня - Королевская жаба! Величественная и важная.",
-    "🐸 Ты сегодня - Жаба-путешественница! Время открывать новые горизонты.",
-    "🐸 Ты сегодня - Ленивая жаба на листе кувшинки. Отдыхай!",
-    "🐸 Ты сегодня - Жаба-философ! Мудрость переполняет тебя.",
-    "🐸 Ты сегодня - Прыгучая жаба! Энергия бьет ключом.",
-    "🐸 Ты сегодня - Задумчивая жаба. Пора поразмышлять о важном.",
-    "🐸 Ты сегодня - Крутая жаба в очках! Ты в тренде.",
-    "🐸 Ты сегодня - Жаба-мечтатель! Витаешь в облаках.",
-    "🐸 Ты сегодня - Коронованная жаба! Ты главный здесь.",
-    "🐸 Ты сегодня - Жаба-спортсмен! Время для активности.",
-    "🐸 Ты сегодня - Жаба-гурман! Наслаждайся вкусной едой.",
-    "🐸 Ты сегодня - Жаба-артист! Твоя креативность безгранична.",
-    "🐸 Ты сегодня - Сонная жаба. Выпей кофе!",
-    "🐸 Ты сегодня - Жаба-дипломат! Решай конфликты грамотно.",
-    "🐸 Ты сегодня - Золотая жаба! Удача на твоей стороне.",
-    "🐸 Ты сегодня - Жаба-няшка! Ты просто прелесть.",
-    "🐸 Ты сегодня - Боевая жаба! Готова к приключениям.",
-    "🐸 Ты сегодня - Жаба-йог! Расслабление и гармония.",
-    "🐸 Ты сегодня - Жаба-библиотекарь! Любишь тишину и книги.",
-    "🐸 Ты сегодня - Жаба-стартап! Идеи переполняют тебя.",
-]
-
+# Список картинок жаб (только ссылки, описания не нужны)
 TOAD_IMAGES = [
-    "https://i.pinimg.com/564x/42/0d/9a/420d9a8642a318f01fcd5d455395349c.jpg",
-    "https://i.pinimg.com/564x/db/fb/2b/dbfb2b23814cb8b19eb0b6677832e701.jpg",
-    "https://i.pinimg.com/564x/4b/48/f1/4b48f12f12ce6cfc8919b4cdb718ede0.jpg",
-    "https://i.pinimg.com/564x/1e/9f/4b/1e9f4b67d815976098afc5477729cf2f.jpg",
-    "https://i.pinimg.com/564x/34/4b/1b/344b1b2db6db44813b383e08cb42d673.jpg",
-    "https://i.pinimg.com/564x/03/19/15/031915ce81ad79f5f69761e8c2df8bce.jpg",
-    "https://i.pinimg.com/564x/8f/da/0d/8fda0d4a7ae43dfc33344b0c0fcf2e54.jpg",
-    "https://i.pinimg.com/564x/59/d8/64/59d864c2a7d824ba53778c8f5727099a.jpg",
+"https://imgur.com/YQwtpNS",
+"https://imgur.com/QvI2j7x",
+"https://imgur.com/aVEceQP",
+"https://imgur.com/qvMZPhq",
+"https://imgur.com/kFecOIZ",
+"https://imgur.com/S7QvKa0",
+"https://imgur.com/fxgOI0K",
+"https://imgur.com/16UeGCf",
+"https://imgur.com/8tC1iN3",
 ]
 
 # --- Функции бота ---
@@ -60,7 +39,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"Привет, {user.first_name}! 👋\n\n"
         "Я - волшебный бот, который поможет тебе узнать, какая ты сегодня жаба! 🐸\n\n"
-        "Нажми на кнопку ниже, чтобы получить своё жабо-определение и картинку!",
+        "Нажми на кнопку ниже, чтобы получить свою жабу!",
         reply_markup=reply_markup
     )
 
@@ -73,20 +52,19 @@ async def get_toad(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         chat_id = update.effective_chat.id
     
-    toad_type = random.choice(TOAD_TYPES)
     toad_image = random.choice(TOAD_IMAGES)
     
+    # Отправляем только картинку, без текста!
     await context.bot.send_photo(
         chat_id=chat_id,
-        photo=toad_image,
-        caption=f"🐸 Твоя жаба на сегодня:\n\n{toad_type}"
+        photo=toad_image
     )
     
     keyboard = [[InlineKeyboardButton("🔄 Узнать снова", callback_data='get_toad')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await context.bot.send_message(
         chat_id=chat_id,
-        text="Хочешь узнать ещё раз? Нажми на кнопку! 👇",
+        text="Хочешь ещё жабу? Нажми на кнопку! 👇",
         reply_markup=reply_markup
     )
 
@@ -96,15 +74,15 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     text = (
         "🐸 *О боте* 🐸\n\n"
-        "Этот бот создан для хорошего настроения!\n"
-        "Каждый раз он выбирает случайную жабу и показывает её картинку.\n\n"
+        "Этот бот показывает случайные картинки с жабами!\n"
+        "Каждый раз — новая жаба!\n\n"
         "💡 *Как использовать:*\n"
         "- Нажми 'Какая я сегодня жаба?'\n"
-        "- Получи картинку и описание\n"
+        "- Получи картинку\n"
         "- Делись с друзьями!\n\n"
         "🚀 *Команды:*\n"
         "/start - Главное меню\n"
-        "/toad - Узнать свою жабу\n"
+        "/toad - Получить жабу\n"
         "/about - Информация о боте"
     )
     
