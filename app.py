@@ -13,16 +13,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# --- КАРТИНКИ ЖАБ (РАБОТАЮТ 100%) ---
+# --- FILE_ID от Telegram (100% рабочие картинки!) ---
 TOAD_IMAGES = [
-    "https://cdn.pixabay.com/photo/2016/03/31/19/02/frog-1295897_1280.png",
-    "https://cdn.pixabay.com/photo/2017/05/30/09/27/frog-2356740_1280.jpg",
-    "https://cdn.pixabay.com/photo/2020/07/28/21/37/frog-5446257_1280.jpg",
-    "https://cdn.pixabay.com/photo/2019/03/31/09/50/frog-4093116_1280.jpg",
-    "https://cdn.pixabay.com/photo/2018/10/02/11/01/frog-3718321_1280.jpg",
-    "https://cdn.pixabay.com/photo/2017/09/05/14/06/frog-2718072_1280.jpg",
-    "https://cdn.pixabay.com/photo/2018/07/13/21/44/frog-3536812_1280.jpg",
-    "https://cdn.pixabay.com/photo/2016/09/06/15/57/frog-1647854_1280.jpg",
+    "AgACAgIAAxkBAAIBz2di-O3xpRwK-rjIel8jfYf1ZzRoAAKawDEbSwaBS8pqzhhY5t9CAQADAgADeQADNgQ",
+    "AgACAgIAAxkBAAIB0Gdi-O6lC9tQ1yfobgVhOgbZ53FrAAKcwDEbSwaBS8Wr6vBHiO-eAQADAgADeQADNgQ",
+    "AgACAgIAAxkBAAIB0Wdi-O9wWlW0kAdJscArlZVmEgoUAAKeBwACY53wS2GQ0WcPAtmjAQADAgADeAADNgQ",
+    "AgACAgIAAxkBAAIB0mdi-O_M03eSHJbw8jXyOC87gIGkAAKgBwACY53wS6zX2BzNvKDhAQADAgADeQADNgQ",
+    "AgACAgIAAxkBAAIB02di-PCq9py2kLNBWMR3fqgN1_LDAAKjBwACY53wS4AMrn5dVs_iAQADAgADeQADNgQ",
+    "AgACAgIAAxkBAAIB1Gdi-PF5Q6l5UkQQqQN-bO9cWlUWAAKmBwACY53wS9KnVvE8NKrRAQADAgADeAADNgQ",
+    "AgACAgIAAxkBAAIB1Wdi-PKWRstlFSTOYRrqE3l_DzGtAAKnBwACY53wS4H7PJArblzpAQADAgADeQADNgQ",
+    "AgACAgIAAxkBAAIB1mdi-POY0xT_RT38wxNh7Nv_tX2YAAKoBwACY53wSwWwhTv3LRGkAQADAgADeAADNgQ",
 ]
 
 # --- Функции бота ---
@@ -52,6 +52,7 @@ async def get_toad(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     toad_image = random.choice(TOAD_IMAGES)
     
+    # Отправляем картинку по file_id
     await context.bot.send_photo(
         chat_id=chat_id,
         photo=toad_image
