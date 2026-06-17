@@ -1,7 +1,7 @@
 import os
 import logging
 import random
-import threading
+import asyncio
 from flask import Flask
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -13,7 +13,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Список определений "какая ты сегодня жаба"
+# Список определений
 TOAD_TYPES = [
     "🐸 Ты сегодня - Королевская жаба! Величественная и важная.",
     "🐸 Ты сегодня - Жаба-путешественница! Время открывать новые горизонты.",
@@ -37,7 +37,6 @@ TOAD_TYPES = [
     "🐸 Ты сегодня - Жаба-стартап! Идеи переполняют тебя.",
 ]
 
-# Ссылки на картинки жаб
 TOAD_IMAGES = [
     "https://i.pinimg.com/564x/42/0d/9a/420d9a8642a318f01fcd5d455395349c.jpg",
     "https://i.pinimg.com/564x/db/fb/2b/dbfb2b23814cb8b19eb0b6677832e701.jpg",
@@ -134,8 +133,8 @@ async def back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# --- Запуск бота в отдельном потоке ---
-def run_bot():
+# --- Запуск бота ---
+async def run_bot():
     token = os.environ.get("TELEGRAM_TOKEN")
     if not token:
         logger.error("TELEGRAM_TOKEN не найден! Установите переменную окружения.")
@@ -149,7 +148,13 @@ def run_bot():
     application.add_handler(CallbackQueryHandler(back_to_menu, pattern='^back_to_menu$'))
     
     logger.info("Бот запускается...")
-    application.run_polling()
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
+    
+    # Держим бота работающим
+    while True:
+        await asyncio.sleep(1)
 
 # --- Flask веб-сервер для Render ---
 app = Flask(__name__)
@@ -164,8 +169,13 @@ def health():
 
 # --- Запуск всего вместе ---
 if __name__ == "__main__":
-    # Запускаем бота в отдельном потоке
-    bot_thread = threading.Thread(target=run_bot)
+    import threading
+    
+    # Запускаем бота в отдельном потоке с asyncio
+    def run_bot_thread():
+        asyncio.run(run_bot())
+    
+    bot_thread = threading.Thread(target=run_bot_thread)
     bot_thread.start()
     
     # Запускаем Flask-сервер
